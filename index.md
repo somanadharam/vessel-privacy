@@ -1,12 +1,12 @@
 # Privacy Policy for Vessel
 
-*Last updated: April 20, 2026*
+*Last updated: April 28, 2026*
 
 Vessel is a voice journaling app built around a commitment to honesty about what happens with your words. This policy explains what data Vessel handles, where it goes, and what your rights are. It is written to be read, not to protect us from you.
 
 ## What Vessel stores on your device
 
-Your journal entries — including transcripts, summaries, reflections, themes, and any audio files — are stored locally on your device using your operating system's secure storage. They are encrypted at rest using a hardware-backed keystore.
+Your journal entries — including transcripts, summaries, reflections, themes, and any audio files — are stored locally on your device using your operating system's secure storage. They are encrypted at rest.
 
 Your PIN, if you set one, is stored as a hash (not as readable text) and checked on each app launch. Biometric unlock, if enabled, uses your device's built-in biometric system; Vessel never sees your fingerprint or face data.
 
@@ -14,13 +14,13 @@ Your preferences — including your tradition choice and feature toggles — are
 
 ## What leaves your device
 
-When you record a voice entry and have the Transcription feature turned on, the audio file is sent over an encrypted connection to our backend server (vessel-backend.vercel.app), which forwards it to OpenAI's Whisper API for transcription. Once the transcript returns, the audio file is deleted from your device.
+When you record a voice entry and have the Transcription feature turned on, the audio file is sent over an encrypted connection to a Cloudflare Worker (vessel-transcribe.somanadharam.workers.dev), which forwards it to OpenAI's Whisper API for transcription. The audio is held in worker memory only during the request and is not persisted. Once the transcript returns, the audio file is also deleted from your device.
 
 When you have the Reflection feature turned on, the resulting transcript is sent to Anthropic's Claude API (via our backend) along with a small amount of context from your recent entries, so Claude can generate a summary and a brief reflection. Only what is needed for that specific reflection is sent.
 
 When you have the Companion Perspectives or Echoes features turned on, relevant entry content is sent to Claude to generate those offerings.
 
-Our backend is a stateless proxy. It does not store your entries, transcripts, or reflections. It exists only to keep API keys secret from the app on your device.
+Vessel uses two stateless proxies — a Cloudflare Worker for audio transcription and a Vercel function for reflection. Neither stores your entries, transcripts, audio, or reflections. They exist only to keep API keys secret from the app on your device, and to hold data briefly in memory while forwarding it.
 
 If you turn the Transcription feature off in Settings, nothing you record leaves your phone. The audio stays on your device as a playable audio file. If you turn the Reflection feature off, transcripts are kept locally but are not sent to Claude.
 
